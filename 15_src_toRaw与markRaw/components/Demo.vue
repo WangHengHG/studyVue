@@ -5,12 +5,14 @@
   <h2>姓名:{{name}}</h2>
   <h2>年龄:{{age}}</h2>
   <h2>薪资:{{job.j1.salary + 'K'}}</h2>
-  <h3 v-show="car">汽车: {{car.name}}</h3>
+  <h3 v-show="person.car">座驾信息: {{person.car}}</h3>
   <button @click="name+= '~'">修改姓名</button>
   <button @click="age++">增长年龄</button>
   <button @click="job.j1.salary++">张薪资</button>
   <button @click="showRawPerson">输出最原始的person</button>
   <button @click="addCar">给人添加一台车</button>
+  <button @click="person.car.name+='!'" v-show="person.car">换车名</button>
+  <button @click="changePrice" v-show="person.car">换价格</button>
 </template>
 
 <script>
@@ -28,7 +30,7 @@ export default {
         j1: {
         salary:20
       }
-      }
+      },
     })
     function showRawPerson(){
       const p = toRaw(person)
@@ -39,15 +41,20 @@ export default {
     function addCar() {
       let car = {
         name: '奔驰',
-        price: '40W'
+        price: 40
       }
-      person.car = car
+      person.car = markRaw(car)
 
+    }
+    function changePrice(){
+      person.car.price++
     }
 
 
     return {
       sum,
+      person,
+      changePrice,
       ...toRefs(person),
       showRawPerson,
       addCar
