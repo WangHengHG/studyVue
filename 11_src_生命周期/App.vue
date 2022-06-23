@@ -1,7 +1,6 @@
 <template>
   <button @click="isShowDemo = !isShowDemo">切换隐藏显示</button>
   <Demo v-if="isShowDemo"></Demo>
-  <hr>
 </template>
 
 <script>
