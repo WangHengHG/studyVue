@@ -1,39 +1,33 @@
 <template>
-  <input type="text" v-model="keyWord">
-  <h3>{{keyWord}}</h3>
+  <div class="app">
+    <h3>我是App组件</h3>
+    <Suspense>
+      <template v-slot:default>
+        <Child></Child>
+      </template>
+      <template v-slot:fallback>
+        <h3>稍等, 加载中</h3>
+      </template>
+    </Suspense>
+  </div>
 </template>
 
 <script>
-import {ref, customRef} from 'vue'
+// import Child from './components/Child.vue' //静态引入
+import { defineAsyncComponent } from 'vue'
+const Child = defineAsyncComponent(()=> import('./components/Child')) //异步引入
+import { ref, reactive, readonly, toRefs, customRef, provide, isRef, isReactive, isReadonly, isProxy } from 'vue'
 export default {
-  name: 'App',
-  setup(){
-    function myRef(value, delay){
-      return customRef((track, trigger)=>{
-        let timer
-        return {
-          get(){
-            console.log(`有人从myRef这个容器中读取数据了, 我把${value}给他了`);
-            track() //通知Vue追踪value 的变化(提前和get商量一下, 让它认为value是有用的)
-            return value
-          },
-          set(newValue){
-            console.log(`有人把myRef这个容器中的数据改为了${newValue}`);
-            clearTimeout(timer)
-            timer = setTimeout(()=>{
-              value = newValue
-              trigger()
-            }, delay) //通知vue重新解析模板
-          }
-        }
-      })
-    }
-    // let keyWord = ref('hello')//使用vue提供的内置的ref
-    let keyWord = myRef('hello', 500)//使用程序员自定义的ref
-    return {keyWord}
+  name: "App",
+  components: {
+    Child
   }
-
 }
 </script>
-
+<style>
+.app {
+  background-color: gray;
+  padding: 10px;
+}
+</style>
 
